@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ユーザーマニュアル - 重複データ管理システム</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='/css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', path='/css/manual.css') }}">
+</head>
+<body>
+    <nav class="main-navigation">
+        <div class="nav-container">
+            <a href="/" class="nav-brand">重複データ管理システム</a>
+            <button class="nav-toggle">☰</button>
+            <ul class="nav-links">
+                <li><a href="/">データ管理</a></li>
+                <li><a href="/system-diagram">システム構成図</a></li>
+                <li><a href="/user-manual">ユーザーマニュアル</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="breadcrumbs"></div>
+
+    <div class="manual-container">
+        <!-- サイドバー -->
+        <aside class="manual-sidebar" id="manual-sidebar">
+            <div class="sidebar-header">
+                <h2>目次</h2>
+                <button class="sidebar-toggle" id="sidebar-toggle" aria-label="サイドバーを開閉">≡</button>
+            </div>
+            
+            <div class="search-box">
+                <input type="text" id="manual-search" placeholder="マニュアルを検索..." aria-label="マニュアル検索">
+                <button class="search-btn" aria-label="検索実行">🔍</button>
+            </div>
+            
+            <nav class="manual-toc" id="manual-toc">
+                <ul>
+                    <li><a href="#overview" data-section="overview">システム概要</a></li>
+                    <li><a href="#getting-started" data-section="getting-started">はじめに</a></li>
+                    <li><a href="#basic-operations" data-section="basic-operations">基本操作</a>
+                        <ul>
+                            <li><a href="#data-display" data-section="data-display">データ表示</a></li>
+                            <li><a href="#filtering" data-section="filtering">フィルタリング</a></li>
+                            <li><a href="#sorting" data-section="sorting">ソート</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#duplicate-detection" data-section="duplicate-detection">重複検出</a>
+                        <ul>
+                            <li><a href="#exact-duplicates" data-section="exact-duplicates">完全一致重複</a></li>
+                            <li><a href="#content-duplicates" data-section="content-duplicates">受付内容重複</a></li>
+                            <li><a href="#status-duplicates" data-section="status-duplicates">対応状況重複</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#data-management" data-section="data-management">データ管理</a>
+                        <ul>
+                            <li><a href="#delete-data" data-section="delete-data">データ削除</a></li>
+                            <li><a href="#restore-data" data-section="restore-data">データ復元</a></li>
+                            <li><a href="#statistics" data-section="statistics">統計情報</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#advanced-features" data-section="advanced-features">高度な機能</a></li>
+                    <li><a href="#troubleshooting" data-section="troubleshooting">トラブルシューティング</a></li>
+                    <li><a href="#faq" data-section="faq">よくある質問</a></li>
+                </ul>
+            </nav>
+            
+            <div class="progress-indicator">
+                <div class="progress-bar" id="reading-progress"></div>
+                <span class="progress-text">読み進行度: <span id="progress-percentage">0%</span></span>
+            </div>
+        </aside>
+
+        <!-- メインコンテンツ -->
+        <main class="manual-content" id="manual-content">
+            <header class="content-header">
+                <h1>重複データ管理システム ユーザーマニュアル</h1>
+                <div class="manual-actions">
+                    <button class="action-btn" id="print-manual">📄 印刷</button>
+                    <button class="action-btn" id="bookmark-section">🔖 ブックマーク</button>
+                    <button class="action-btn" id="font-size-toggle">🔤 文字サイズ</button>
+                </div>
+            </header>
+
+            <!-- システム概要 -->
+            <section id="overview" class="manual-section">
+                <h2>システム概要</h2>
+                <p>重複データ管理システムは、PostgreSQLデータベースから取得した受信データの重複を検出・管理するWebアプリケーションです。</p>
+                
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h3>🔍 重複検出</h3>
+                        <p>3種類の重複タイプで精密なデータ分析</p>
+                        <ul>
+                            <li>完全一致重複</li>
+                            <li>受付内容重複</li>
+                            <li>対応状況重複</li>
+                        </ul>
+                    </div>
+                    <div class="feature-card">
+                        <h3>🛡️ 安全な削除</h3>
+                        <p>論理削除による安全なデータ管理</p>
+                        <ul>
+                            <li>データの完全復旧可能</li>
+                            <li>誤削除防止機能</li>
+                            <li>操作ログ記録</li>
+                        </ul>
+                    </div>
+                    <div class="feature-card">
+                        <h3>🔄 データ復元</h3>
+                        <p>削除済みデータの簡単復元</p>
+                        <ul>
+                            <li>ワンクリック復元</li>
+                            <li>バッチ復元対応</li>
+                            <li>整合性自動チェック</li>
+                        </ul>
+                    </div>
+                    <div class="feature-card">
+                        <h3>📊 統計情報</h3>
+                        <p>リアルタイム統計とダッシュボード</p>
+                        <ul>
+                            <li>全体データ数</li>
+                            <li>有効データ数</li>
+                            <li>削除済みデータ数</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- はじめに -->
+            <section id="getting-started" class="manual-section">
+                <h2>はじめに</h2>
+                
+                <h3>システム要件</h3>
+                <div class="requirement-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>項目</th>
+                                <th>要件</th>
+                                <th>推奨</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>ブラウザ</td>
+                                <td>Chrome 80+, Firefox 75+, Safari 13+, Edge 80+</td>
+                                <td>Chrome 最新版</td>
+                            </tr>
+                            <tr>
+                                <td>解像度</td>
+                                <td>768px以上</td>
+                                <td>1200px以上（PC環境）</td>
+                            </tr>
+                            <tr>
+                                <td>JavaScript</td>
+                                <td>有効化必須</td>
+                                <td>最新のES6+対応</td>
+                            </tr>
+                            <tr>
+                                <td>ネットワーク</td>
+                                <td>インターネット接続</td>
+                                <td>安定した高速回線</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <h3>画面構成</h3>
+                <div class="ui-explanation">
+                    <h4>主要UI要素</h4>
+                    <div class="ui-components">
+                        <div class="ui-component">
+                            <div class="ui-number">1</div>
+                            <div class="ui-content">
+                                <h5>ナビゲーションバー</h5>
+                                <p>システム内の主要機能への移動メニュー</p>
+                            </div>
+                        </div>
+                        <div class="ui-component">
+                            <div class="ui-number">2</div>
+                            <div class="ui-content">
+                                <h5>フィルターパネル</h5>
+                                <p>データ絞り込み条件の設定エリア</p>
+                            </div>
+                        </div>
+                        <div class="ui-component">
+                            <div class="ui-number">3</div>
+                            <div class="ui-content">
+                                <h5>データテーブル</h5>
+                                <p>受信データの一覧表示エリア</p>
+                            </div>
+                        </div>
+                        <div class="ui-component">
+                            <div class="ui-number">4</div>
+                            <div class="ui-content">
+                                <h5>操作ボタン</h5>
+                                <p>削除・復元・重複検出の実行ボタン</p>
+                            </div>
+                        </div>
+                        <div class="ui-component">
+                            <div class="ui-number">5</div>
+                            <div class="ui-content">
+                                <h5>統計情報</h5>
+                                <p>データ統計のリアルタイム表示</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="getting-started-tips">
+                    <h4>💡 初回利用のヒント</h4>
+                    <ul>
+                        <li>まず統計情報でデータ全体を把握しましょう</li>
+                        <li>フィルター機能で少量のデータから操作に慣れましょう</li>
+                        <li>重複検出は「完全一致」から始めることを推奨します</li>
+                        <li>削除操作前には必ずバックアップの確認を行いましょう</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- 基本操作 -->
+            <section id="basic-operations" class="manual-section">
+                <h2>基本操作</h2>
+                
+                <h3 id="data-display">データ表示</h3>
+                <p>システムにアクセスすると、受信データが一覧表示されます。</p>
+                
+                <div class="step-guide">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h4>ページアクセス</h4>
+                            <p>ブラウザでシステムURLにアクセスします。</p>
+                            <div class="code-block">
+                                <code>http://localhost:8000</code>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h4>データ確認</h4>
+                            <p>画面中央のテーブルに受信データが表示されます。</p>
+                            <div class="tip">💡 初期状態では最新100件が表示されます</div>
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h4>ページング</h4>
+                            <p>大量データは自動的にページ分割されます。</p>
+                            <div class="tip">💡 下にスクロールすると自動的に追加データが読み込まれます</div>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 id="filtering">フィルタリング</h3>
+                <p>条件を指定してデータを絞り込むことができます。</p>
+                
+                <div class="filter-types">
+                    <h4>フィルタータイプ</h4>
+                    
+                    <div class="filter-type">
+                        <h5>🔍 キーワード検索</h5>
+                        <div class="filter-description">
+                            <p><strong>受付内容キーワード</strong>: 受付内容のみを検索対象とします</p>
+                            <div class="example">例: "エラー" で検索すると受付内容に「エラー」を含むデータのみ表示</div>
+                            
+                            <p><strong>対応状況キーワード</strong>: 対応状況のみを検索対象とします</p>
+                            <div class="example">例: "完了" で検索すると対応状況が「完了」のデータのみ表示</div>
+                            
+                            <p><strong>統合キーワード</strong>: 受付内容と対応状況の両方を検索（後方互換性）</p>
+                            <div class="example">例: "システム" で検索すると受付内容または対応状況に「システム」を含むデータを表示</div>
+                        </div>
+                    </div>
+                    
+                    <div class="filter-type">
+                        <h5>📋 マスターフィルター</h5>
+                        <div class="filter-description">
+                            <p><strong>進捗</strong>: 処理進捗による絞り込み</p>
+                            <div class="example">例: "未着手", "進行中", "完了" など</div>
+                            
+                            <p><strong>システム種別</strong>: システムタイプによる絞り込み</p>
+                            <div class="example">例: "基幹システム", "Webシステム" など</div>
+                            
+                            <p><strong>製品</strong>: 製品種別による絞り込み</p>
+                            <div class="example">例: "製品A", "製品B" など</div>
+                        </div>
+                    </div>
+                    
+                    <div class="filter-type">
+                        <h5>📅 日付フィルター</h5>
+                        <div class="filter-description">
+                            <p><strong>受付日時</strong>: データ受付日時の範囲指定</p>
+                            <p><strong>更新日時</strong>: データ更新日時の範囲指定</p>
+                            <p><strong>削除日時</strong>: データ削除日時の範囲指定</p>
+                            <div class="example">例: 2024/01/01 ～ 2024/01/31 の期間でフィルター</div>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 id="sorting">ソート</h3>
+                <p>列ヘッダーをクリックしてデータをソートできます。</p>
+                
+                <div class="sort-demo">
+                    <h4>ソート操作手順</h4>
+                    <div class="sort-steps">
+                        <div class="sort-step">
+                            <span class="sort-step-number">1</span>
+                            <span>ソートしたい列のヘッダーをクリック</span>
+                        </div>
+                        <div class="sort-step">
+                            <span class="sort-step-number">2</span>
+                            <span>▲（昇順）または▼（降順）アイコンが表示</span>
+                        </div>
+                        <div class="sort-step">
+                            <span class="sort-step-number">3</span>
+                            <span>再度クリックでソート順が逆転</span>
+                        </div>
+                    </div>
+                    
+                    <div class="sort-examples">
+                        <h5>ソート例</h5>
+                        <ul>
+                            <li><strong>ID昇順</strong>: 古いデータから新しいデータの順</li>
+                            <li><strong>受付日時降順</strong>: 最新のデータから古いデータの順</li>
+                            <li><strong>進捗</strong>: アルファベット順または登録順</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 重複検出 -->
+            <section id="duplicate-detection" class="manual-section">
+                <h2>重複検出</h2>
+                <p>システムでは3種類の重複検出アルゴリズムを提供しています。</p>
+                
+                <h3 id="exact-duplicates">完全一致重複</h3>
+                <div class="duplicate-explanation">
+                    <h4>🎯 検出条件</h4>
+                    <p>受付内容（rdata）と対応状況（execstate）の両方が完全に一致するデータを検出します。</p>
+                    
+                    <h4>📋 使用場面</h4>
+                    <div class="use-cases">
+                        <div class="use-case">
+                            <h5>全く同じ問い合わせの重複受付</h5>
+                            <p>同一顧客から同じ内容の問い合わせが複数回登録された場合</p>
+                        </div>
+                        <div class="use-case">
+                            <h5>システム障害による重複登録</h5>
+                            <p>システム障害やネットワーク問題で同じデータが重複して登録された場合</p>
+                        </div>
+                        <div class="use-case">
+                            <h5>オペレーターミスによる重複入力</h5>
+                            <p>操作者のミスで同じデータが複数回入力された場合</p>
+                        </div>
+                    </div>
+                    
+                    <div class="usage-example">
+                        <h4>💻 操作手順</h4>
+                        <div class="operation-steps">
+                            <div class="op-step">
+                                <span class="op-number">1</span>
+                                <span>「重複タイプ」ドロップダウンで「完全一致」を選択</span>
+                            </div>
+                            <div class="op-step">
+                                <span class="op-number">2</span>
+                                <span>必要に応じてフィルター条件を設定（推奨）</span>
+                            </div>
+                            <div class="op-step">
+                                <span class="op-number">3</span>
+                                <span>「重複検出」ボタンをクリック</span>
+                            </div>
+                            <div class="op-step">
+                                <span class="op-number">4</span>
+                                <span>検出結果がグループ化されて表示</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 id="content-duplicates">受付内容重複</h3>
+                <div class="duplicate-explanation">
+                    <h4>🎯 検出条件</h4>
+                    <p>受付内容（rdata）のみが一致するデータを検出します。対応状況は考慮しません。</p>
+                    
+                    <h4>📋 使用場面</h4>
+                    <div class="use-cases">
+                        <div class="use-case">
+                            <h5>同じ内容で異なる対応状況のデータ</h5>
+                            <p>同じ問い合わせ内容だが、処理状況や担当者が異なるケース</p>
+                        </div>
+                        <div class="use-case">
+                            <h5>処理進捗が異なる類似案件</h5>
+                            <p>同一内容だが処理段階が違うデータの統合検討</p>
+                        </div>
+                        <div class="use-case">
+                            <h5>対応者が違う同一問題</h5>
+                            <p>同じ問題を複数の担当者が別々に対応している状況</p>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 id="status-duplicates">対応状況重複</h3>
+                <div class="duplicate-explanation">
+                    <h4>🎯 検出条件</h4>
+                    <p>対応状況（execstate）のみが一致するデータを検出します。受付内容は考慮しません。</p>
+                    
+                    <h4>📋 使用場面</h4>
+                    <div class="use-cases">
+                        <div class="use-case">
+                            <h5>同じ対応パターンのデータ分析</h5>
+                            <p>類似した対応方法を取っているデータの一括管理</p>
+                        </div>
+                        <div class="use-case">
+                            <h5>対応方法の統計分析</h5>
+                            <p>効果的な対応方法の傾向分析とベストプラクティス抽出</p>
+                        </div>
+                        <div class="use-case">
+                            <h5>処理フローの見直し検討</h5>
+                            <p>同じ対応状況のデータから業務プロセス改善点を発見</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detection-tips">
+                    <h4>🔍 重複検出のコツ</h4>
+                    <div class="tips-grid">
+                        <div class="tip-item">
+                            <h5>段階的検出</h5>
+                            <p>まず「完全一致」で明確な重複を除去してから、「受付内容」や「対応状況」で詳細分析を行う</p>
+                        </div>
+                        <div class="tip-item">
+                            <h5>フィルター活用</h5>
+                            <p>期間や担当者でフィルターしてから重複検出を行うことで、関連性の高いデータに絞り込める</p>
+                        </div>
+                        <div class="tip-item">
+                            <h5>結果の確認</h5>
+                            <p>重複検出結果は必ず内容を確認してから削除を実行する（論理削除なので復元可能）</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- データ管理 -->
+            <section id="data-management" class="manual-section">
+                <h2>データ管理</h2>
+                
+                <h3 id="delete-data">データ削除</h3>
+                <p>システムでは安全な論理削除を採用しています。</p>
+                
+                <div class="warning-box">
+                    <h4>⚠️ 重要事項</h4>
+                    <p>このシステムでは物理削除は行いません。すべて論理削除（削除フラグ設定）で管理されるため、誤削除時も復元可能です。</p>
+                </div>
+                
+                <div class="delete-guide">
+                    <h4>🗑️ 削除手順</h4>
+                    <div class="delete-steps">
+                        <div class="delete-step">
+                            <div class="step-icon">1</div>
+                            <div class="step-text">
+                                <h5>削除対象の選択</h5>
+                                <p>削除対象のデータにチェックを入れる</p>
+                                <div class="sub-info">複数選択可能、全選択も利用可能</div>
+                            </div>
+                        </div>
+                        <div class="delete-step">
+                            <div class="step-icon">2</div>
+                            <div class="step-text">
+                                <h5>削除ボタンクリック</h5>
+                                <p>「選択データ削除」ボタンをクリック</p>
+                                <div class="sub-info">選択数がボタンに表示されます</div>
+                            </div>
+                        </div>
+                        <div class="delete-step">
+                            <div class="step-icon">3</div>
+                            <div class="step-text">
+                                <h5>削除確認</h5>
+                                <p>確認ダイアログで「削除」を選択</p>
+                                <div class="sub-info">この段階でキャンセル可能</div>
+                            </div>
+                        </div>
+                        <div class="delete-step">
+                            <div class="step-icon">4</div>
+                            <div class="step-text">
+                                <h5>削除完了</h5>
+                                <p>削除完了メッセージを確認</p>
+                                <div class="sub-info">統計情報が自動更新されます</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <h4>📦 バッチ削除機能</h4>
+                    <p>複数のデータを一度に削除することも可能です。</p>
+                    <div class="batch-options">
+                        <div class="batch-option">
+                            <h5>全選択削除</h5>
+                            <p>「全選択」チェックボックスで表示中の全データを選択して削除</p>
+                        </div>
+                        <div class="batch-option">
+                            <h5>フィルター削除</h5>
+                            <p>フィルター条件に一致するデータを一括選択して削除</p>
+                        </div>
+                        <div class="batch-option">
+                            <h5>重複グループ削除</h5>
+                            <p>重複検出結果のグループ単位での一括削除</p>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 id="restore-data">データ復元</h3>
+                <p>削除済みデータを元の状態に戻すことができます。</p>
+                
+                <div class="restore-guide">
+                    <h4>🔄 復元手順</h4>
+                    <div class="restore-steps">
+                        <div class="restore-step">
+                            <div class="step-icon">1</div>
+                            <div class="step-text">
+                                <h5>削除済みデータ表示</h5>
+                                <p>「削除済みデータを表示」をチェック</p>
+                                <div class="sub-info">削除フラグが設定されたデータが表示されます</div>
+                            </div>
+                        </div>
+                        <div class="restore-step">
+                            <div class="step-icon">2</div>
+                            <div class="step-text">
+                                <h5>復元対象の選択</h5>
+                                <p>復元対象のデータを選択</p>
+                                <div class="sub-info">削除済みデータは背景色で区別されます</div>
+                            </div>
+                        </div>
+                        <div class="restore-step">
+                            <div class="step-icon">3</div>
+                            <div class="step-text">
+                                <h5>復元実行</h5>
+                                <p>「選択データ復元」ボタンをクリック</p>
+                                <div class="sub-info">確認ダイアログが表示されます</div>
+                            </div>
+                        </div>
+                        <div class="restore-step">
+                            <div class="step-icon">4</div>
+                            <div class="step-text">
+                                <h5>復元完了</h5>
+                                <p>復元完了メッセージを確認</p>
+                                <div class="sub-info">データが有効状態に戻ります</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-box">
+                        <h4>💡 復元のポイント</h4>
+                        <ul>
+                            <li>復元されたデータは削除前の状態に完全復帰します</li>
+                            <li>削除時の情報（削除日時、操作者など）は履歴として保持されます</li>
+                            <li>復元操作も操作ログに記録されます</li>
+                            <li>復元後は即座に通常のデータとして利用可能です</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3 id="statistics">統計情報</h3>
+                <p>システムではリアルタイムでデータ統計を表示します。</p>
+                
+                <div class="statistics-explanation">
+                    <h4>📊 統計項目</h4>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <h5>全体データ数</h5>
+                            <p>システム内の総データ件数（削除済み含む）</p>
+                            <div class="stat-formula">有効データ数 + 削除済みデータ数</div>
+                        </div>
+                        <div class="stat-item">
+                            <h5>有効データ数</h5>
+                            <p>削除されていないアクティブなデータ件数</p>
+                            <div class="stat-formula">receptmoddt が NULL のデータ</div>
+                        </div>
+                        <div class="stat-item">
+                            <h5>削除済みデータ数</h5>
+                            <p>論理削除されたデータ件数</p>
+                            <div class="stat-formula">receptmoddt が設定されたデータ</div>
+                        </div>
+                    </div>
+                    
+                    <h4>📈 統計の活用方法</h4>
+                    <div class="stats-usage">
+                        <div class="usage-item">
+                            <h5>データ管理状況の把握</h5>
+                            <p>システム全体のデータ量と削除状況を一目で確認</p>
+                        </div>
+                        <div class="usage-item">
+                            <h5>削除・復元操作の効果確認</h5>
+                            <p>操作前後での統計値変化により効果を定量的に評価</p>
+                        </div>
+                        <div class="usage-item">
+                            <h5>システム利用状況の監視</h5>
+                            <p>データ増減傾向からシステムの利用パターンを分析</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 高度な機能 -->
+            <section id="advanced-features" class="manual-section">
+                <h2>高度な機能</h2>
+                
+                <h3>⌨️ キーボードショートカット</h3>
+                <div class="shortcut-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>機能</th>
+                                <th>ショートカット</th>
+                                <th>説明</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>検索フォーカス</td>
+                                <td><kbd>Ctrl</kbd> + <kbd>F</kbd></td>
+                                <td>キーワード検索ボックスにフォーカス</td>
+                            </tr>
+                            <tr>
+                                <td>全選択</td>
+                                <td><kbd>Ctrl</kbd> + <kbd>A</kbd></td>
+                                <td>表示中の全データを選択</td>
+                            </tr>
+                            <tr>
+                                <td>削除実行</td>
+                                <td><kbd>Delete</kbd></td>
+                                <td>選択データの削除（確認ダイアログ表示）</td>
+                            </tr>
+                            <tr>
+                                <td>復元実行</td>
+                                <td><kbd>Ctrl</kbd> + <kbd>Z</kbd></td>
+                                <td>選択データの復元</td>
+                            </tr>
+                            <tr>
+                                <td>フィルターリセット</td>
+                                <td><kbd>Ctrl</kbd> + <kbd>R</kbd></td>
+                                <td>全フィルター条件をクリア</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3>🔗 URL パラメーター</h3>
+                <p>URLパラメーターで直接フィルター条件を指定できます。</p>
+                
+                <div class="url-examples">
+                    <h4>パラメーター例</h4>
+                    <div class="url-example">
+                        <h5>キーワード検索</h5>
+                        <code>?content_keyword=エラー</code>
+                        <p>受付内容に「エラー」を含むデータを表示</p>
+                    </div>
+                    <div class="url-example">
+                        <h5>進捗フィルター</h5>
+                        <code>?progress=完了</code>
+                        <p>進捗が「完了」のデータを表示</p>
+                    </div>
+                    <div class="url-example">
+                        <h5>削除済み表示</h5>
+                        <code>?include_deleted=true</code>
+                        <p>削除済みデータも含めて表示</p>
+                    </div>
+                    <div class="url-example">
+                        <h5>日付範囲指定</h5>
+                        <code>?date_from=2024-01-01&date_to=2024-01-31</code>
+                        <p>指定期間のデータを表示</p>
+                    </div>
+                </div>
+
+                <h3>🎨 ユーザビリティ機能</h3>
+                <div class="usability-features">
+                    <div class="feature">
+                        <h4>文字サイズ調整</h4>
+                        <p>画面右上の「文字サイズ」ボタンで表示サイズを調整</p>
+                        <div class="feature-options">
+                            <span class="size-option">小</span>
+                            <span class="size-option">中（標準）</span>
+                            <span class="size-option">大</span>
+                        </div>
+                    </div>
+                    <div class="feature">
+                        <h4>カラムカスタマイズ</h4>
+                        <p>テーブルヘッダーから表示列の選択・並び替えが可能</p>
+                    </div>
+                    <div class="feature">
+                        <h4>データエクスポート</h4>
+                        <p>フィルター結果をCSV形式でエクスポート可能</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- トラブルシューティング -->
+            <section id="troubleshooting" class="manual-section">
+                <h2>トラブルシューティング</h2>
+                
+                <div class="troubleshoot-item">
+                    <h3>❌ データが表示されない</h3>
+                    <div class="problem-solution">
+                        <div class="problem">
+                            <h4>考えられる原因</h4>
+                            <ul>
+                                <li>フィルター条件が厳しすぎる</li>
+                                <li>データベース接続エラー</li>
+                                <li>ブラウザのJavaScriptが無効</li>
+                                <li>ネットワーク接続問題</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="solution">
+                            <h4>解決方法</h4>
+                            <div class="solution-steps">
+                                <div class="solution-step">
+                                    <span class="step-num">1</span>
+                                    <span>フィルター条件をリセット</span>
+                                </div>
+                                <div class="solution-step">
+                                    <span class="step-num">2</span>
+                                    <span>ブラウザを再読み込み（F5キー）</span>
+                                </div>
+                                <div class="solution-step">
+                                    <span class="step-num">3</span>
+                                    <span>JavaScript有効化を確認</span>
+                                </div>
+                                <div class="solution-step">
+                                    <span class="step-num">4</span>
+                                    <span>ネットワーク接続を確認</span>
+                                </div>
+                                <div class="solution-step">
+                                    <span class="step-num">5</span>
+                                    <span>問題が続く場合は管理者に連絡</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="troubleshoot-item">
+                    <h3>🔄 重複検出が動作しない</h3>
+                    <div class="problem-solution">
+                        <div class="problem">
+                            <h4>考えられる原因</h4>
+                            <ul>
+                                <li>検索対象データが存在しない</li>
+                                <li>フィルター条件で対象データが除外されている</li>
+                                <li>ネットワーク接続問題</li>
+                                <li>サーバー処理時間超過</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="solution">
+                            <h4>解決方法</h4>
+                            <div class="solution-steps">
+                                <div class="solution-step">
+                                    <span class="step-num">1</span>
+                                    <span>フィルター条件を緩和または解除</span>
+                                </div>
+                                <div class="solution-step">
+                                    <span class="step-num">2</span>
+                                    <span>別の重複タイプを試行</span>
+                                </div>
+                                <div class="solution-step">
+                                    <span class="step-num">3</span>
+                                    <span>インターネット接続を確認</span>
+                                </div>
+                                <div class="solution-step">
+                                    <span class="step-num">4</span>
+                                    <span>小さなデータセットで先にテスト</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="troubleshoot-item">
+                    <h3>🗑️ 削除・復元が失敗する</h3>
+                    <div class="problem-solution">
+                        <div class="problem">
+                            <h4>考えられる原因</h4>
+                            <ul>
+                                <li>データベース権限不足</li>
+                                <li>対象データが存在しない</li>
+                                <li>セッションタイムアウト</li>
+                                <li>同時操作による競合</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="solution">
+                            <h4>解決方法</h4>
+                            <div class="solution-steps">
+                                <div class="solution-step">
+                                    <span class="step-num">1</span>
+                                    <span>ページを再読み込み</span>
+                                </div>
+                                <div class="solution-step">
+                                    <span class="step-num">2</span>
+                                    <span>データ選択状態を再確認</span>
+                                </div>
+                                <div class="solution-step">
+                                    <span class="step-num">3</span>
+                                    <span>少数のデータから操作を試行</span>
+                                </div>
+                                <div class="solution-step">
+                                    <span class="step-num">4</span>
+                                    <span>管理者に権限確認を依頼</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="troubleshoot-item">
+                    <h3>🐌 動作が遅い</h3>
+                    <div class="problem-solution">
+                        <div class="problem">
+                            <h4>考えられる原因</h4>
+                            <ul>
+                                <li>大量データの処理</li>
+                                <li>ネットワーク速度</li>
+                                <li>ブラウザのメモリ不足</li>
+                                <li>同時アクセス数の増加</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="solution">
+                            <h4>解決方法</h4>
+                            <div class="solution-steps">
+                                <div class="solution-step">
+                                    <span class="step-num">1</span>
+                                    <span>フィルターでデータ量を制限</span>
+                                </div>
+                                <div class="solution-step">
+                                    <span class="step-num">2</span>
+                                    <span>ブラウザのタブ・拡張機能を削減</span>
+                                </div>
+                                <div class="solution-step">
+                                    <span class="step-num">3</span>
+                                    <span>ブラウザを再起動</span>
+                                </div>
+                                <div class="solution-step">
+                                    <span class="step-num">4</span>
+                                    <span>時間をずらして再試行</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- よくある質問 -->
+            <section id="faq" class="manual-section">
+                <h2>よくある質問（FAQ）</h2>
+                
+                <div class="faq-item">
+                    <h3 class="faq-question">Q: 削除したデータは完全に消えますか？</h3>
+                    <div class="faq-answer">
+                        <p><strong>A:</strong> いいえ。このシステムでは論理削除を採用しているため、削除されたデータは「削除フラグ」が設定されるだけで、実際のデータは保持されます。必要に応じて復元可能です。</p>
+                        <div class="faq-detail">
+                            <p><strong>詳細:</strong></p>
+                            <ul>
+                                <li>データベース上では receptmoddt フィールドに削除日時が記録されます</li>
+                                <li>削除前の全情報が完全に保持されます</li>
+                                <li>復元時は削除前の状態に完全復帰します</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <h3 class="faq-question">Q: 重複検出の精度はどの程度ですか？</h3>
+                    <div class="faq-answer">
+                        <p><strong>A:</strong> 文字列完全一致の場合は100%の精度です。各重複タイプは以下の条件で検出されます：</p>
+                        <div class="faq-detail">
+                            <ul>
+                                <li><strong>完全一致重複:</strong> 受付内容と対応状況が両方とも完全一致</li>
+                                <li><strong>受付内容重複:</strong> 受付内容が完全一致（対応状況は無関係）</li>
+                                <li><strong>対応状況重複:</strong> 対応状況が完全一致（受付内容は無関係）</li>
+                            </ul>
+                            <p><strong>注意:</strong> 部分一致や類似検出は含まれません。完全に同じ文字列の場合のみ検出されます。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <h3 class="faq-question">Q: 大量データの処理時間はどの程度かかりますか？</h3>
+                    <div class="faq-answer">
+                        <p><strong>A:</strong> データ量やサーバー性能により異なりますが、目安は以下の通りです：</p>
+                        <div class="faq-detail">
+                            <div class="processing-time-table">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>データ件数</th>
+                                            <th>処理時間の目安</th>
+                                            <th>推奨操作</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>1,000件以下</td>
+                                            <td>1-2秒</td>
+                                            <td>通常操作</td>
+                                        </tr>
+                                        <tr>
+                                            <td>10,000件以下</td>
+                                            <td>5-10秒</td>
+                                            <td>通常操作</td>
+                                        </tr>
+                                        <tr>
+                                            <td>100,000件以上</td>
+                                            <td>30秒-数分</td>
+                                            <td>フィルター使用推奨</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <p><strong>高速化のコツ:</strong> 日付範囲やキーワードでフィルターしてからの操作を推奨します。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <h3 class="faq-question">Q: モバイルデバイスでも利用できますか？</h3>
+                    <div class="faq-answer">
+                        <p><strong>A:</strong> 基本的な機能はモバイルでも利用可能ですが、PC環境での利用を強く推奨します。</p>
+                        <div class="faq-detail">
+                            <p><strong>推奨環境:</strong></p>
+                            <ul>
+                                <li><strong>最適:</strong> PC環境（1200px以上）</li>
+                                <li><strong>利用可能:</strong> タブレット（768px以上）</li>
+                                <li><strong>制限あり:</strong> スマートフォン（768px未満）</li>
+                            </ul>
+                            <p><strong>理由:</strong> 大量データの表示や複雑な操作は画面サイズが大きい環境の方が効率的に行えます。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <h3 class="faq-question">Q: データのバックアップは取られていますか？</h3>
+                    <div class="faq-answer">
+                        <p><strong>A:</strong> システムレベルでのバックアップ状況については管理者にご確認ください。</p>
+                        <div class="faq-detail">
+                            <p><strong>このシステムの安全機能:</strong></p>
+                            <ul>
+                                <li>論理削除によるデータ保護（物理削除なし）</li>
+                                <li>操作ログの自動記録</li>
+                                <li>データ復元機能</li>
+                                <li>操作前の確認ダイアログ</li>
+                            </ul>
+                            <p><strong>推奨:</strong> 重要な操作前には必要に応じて画面キャプチャやCSVエクスポートでの手動バックアップも検討してください。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <h3 class="faq-question">Q: エラーが発生した場合はどうすればよいですか？</h3>
+                    <div class="faq-answer">
+                        <p><strong>A:</strong> 以下の順序で対処してください：</p>
+                        <div class="faq-detail">
+                            <div class="error-steps">
+                                <div class="error-step">
+                                    <span class="error-num">1</span>
+                                    <span><strong>即座に対処:</strong> ブラウザを再読み込み（F5）</span>
+                                </div>
+                                <div class="error-step">
+                                    <span class="error-num">2</span>
+                                    <span><strong>基本確認:</strong> ネットワーク接続とJavaScript有効化を確認</span>
+                                </div>
+                                <div class="error-step">
+                                    <span class="error-num">3</span>
+                                    <span><strong>環境確認:</strong> 対応ブラウザでの利用を確認</span>
+                                </div>
+                                <div class="error-step">
+                                    <span class="error-num">4</span>
+                                    <span><strong>再試行:</strong> 少量データから操作を再試行</span>
+                                </div>
+                                <div class="error-step">
+                                    <span class="error-num">5</span>
+                                    <span><strong>報告:</strong> 問題が解決しない場合は管理者に状況を報告</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="{{ url_for('static', path='/js/navigation.js') }}"></script>
+    <script src="{{ url_for('static', path='/js/manual.js') }}"></script>
+</body>
+</html>

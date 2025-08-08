@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>システム構成図 - 重複データ管理システム</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='/css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', path='/css/diagram.css') }}">
+</head>
+<body>
+    <nav class="main-navigation">
+        <div class="nav-container">
+            <a href="/" class="nav-brand">重複データ管理システム</a>
+            <button class="nav-toggle">☰</button>
+            <ul class="nav-links">
+                <li><a href="/">データ管理</a></li>
+                <li><a href="/system-diagram">システム構成図</a></li>
+                <li><a href="/user-manual">ユーザーマニュアル</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="breadcrumbs"></div>
+
+    <main class="diagram-container">
+        <header class="page-header">
+            <h1>システム構成図</h1>
+            <p>重複データ管理システムのアーキテクチャと技術スタックを可視化します</p>
+        </header>
+
+        <div class="diagram-controls">
+            <button class="control-btn" id="zoom-in">拡大</button>
+            <button class="control-btn" id="zoom-out">縮小</button>
+            <button class="control-btn" id="reset-view">リセット</button>
+            <button class="control-btn" id="fullscreen">フルスクリーン</button>
+        </div>
+
+        <div class="diagram-wrapper" id="diagram-wrapper">
+            <svg class="architecture-diagram" id="architecture-diagram" viewBox="0 0 1200 800">
+                <!-- フロントエンド層 -->
+                <g class="layer frontend-layer" data-layer="frontend">
+                    <rect x="50" y="50" width="1100" height="150" rx="10" class="layer-bg frontend-bg"/>
+                    <text x="600" y="35" text-anchor="middle" class="layer-title">フロントエンド層</text>
+                    
+                    <g class="component" data-component="html" tabindex="0">
+                        <rect x="100" y="80" width="200" height="80" rx="5" class="component-box"/>
+                        <text x="200" y="110" text-anchor="middle" class="component-title">HTML5</text>
+                        <text x="200" y="130" text-anchor="middle" class="component-desc">セマンティックマークアップ</text>
+                    </g>
+                    
+                    <g class="component" data-component="css" tabindex="0">
+                        <rect x="350" y="80" width="200" height="80" rx="5" class="component-box"/>
+                        <text x="450" y="110" text-anchor="middle" class="component-title">CSS3</text>
+                        <text x="450" y="130" text-anchor="middle" class="component-desc">Grid/Flexbox レイアウト</text>
+                    </g>
+                    
+                    <g class="component" data-component="javascript" tabindex="0">
+                        <rect x="600" y="80" width="200" height="80" rx="5" class="component-box"/>
+                        <text x="700" y="110" text-anchor="middle" class="component-title">Vanilla JavaScript</text>
+                        <text x="700" y="130" text-anchor="middle" class="component-desc">ES6+ モジュール</text>
+                    </g>
+                    
+                    <g class="component" data-component="spa" tabindex="0">
+                        <rect x="850" y="80" width="200" height="80" rx="5" class="component-box"/>
+                        <text x="950" y="110" text-anchor="middle" class="component-title">SPA</text>
+                        <text x="950" y="130" text-anchor="middle" class="component-desc">シングルページアプリ</text>
+                    </g>
+                </g>
+
+                <!-- API層 -->
+                <g class="layer api-layer" data-layer="api">
+                    <rect x="50" y="250" width="1100" height="150" rx="10" class="layer-bg api-bg"/>
+                    <text x="600" y="235" text-anchor="middle" class="layer-title">API層</text>
+                    
+                    <g class="component" data-component="fastapi" tabindex="0">
+                        <rect x="150" y="280" width="250" height="80" rx="5" class="component-box"/>
+                        <text x="275" y="310" text-anchor="middle" class="component-title">FastAPI</text>
+                        <text x="275" y="330" text-anchor="middle" class="component-desc">RESTful API フレームワーク</text>
+                    </g>
+                    
+                    <g class="component" data-component="uvicorn" tabindex="0">
+                        <rect x="450" y="280" width="200" height="80" rx="5" class="component-box"/>
+                        <text x="550" y="310" text-anchor="middle" class="component-title">Uvicorn</text>
+                        <text x="550" y="330" text-anchor="middle" class="component-desc">ASGI Webサーバー</text>
+                    </g>
+                    
+                    <g class="component" data-component="pydantic" tabindex="0">
+                        <rect x="700" y="280" width="200" height="80" rx="5" class="component-box"/>
+                        <text x="800" y="310" text-anchor="middle" class="component-title">Pydantic</text>
+                        <text x="800" y="330" text-anchor="middle" class="component-desc">データバリデーション</text>
+                    </g>
+                </g>
+
+                <!-- サービス層 -->
+                <g class="layer service-layer" data-layer="service">
+                    <rect x="50" y="450" width="1100" height="150" rx="10" class="layer-bg service-bg"/>
+                    <text x="600" y="435" text-anchor="middle" class="layer-title">サービス層</text>
+                    
+                    <g class="component" data-component="data-service" tabindex="0">
+                        <rect x="100" y="480" width="180" height="80" rx="5" class="component-box"/>
+                        <text x="190" y="510" text-anchor="middle" class="component-title">DataService</text>
+                        <text x="190" y="530" text-anchor="middle" class="component-desc">データ取得</text>
+                    </g>
+                    
+                    <g class="component" data-component="duplicate-service" tabindex="0">
+                        <rect x="320" y="480" width="180" height="80" rx="5" class="component-box"/>
+                        <text x="410" y="510" text-anchor="middle" class="component-title">DuplicateService</text>
+                        <text x="410" y="530" text-anchor="middle" class="component-desc">重複検出</text>
+                    </g>
+                    
+                    <g class="component" data-component="delete-service" tabindex="0">
+                        <rect x="540" y="480" width="180" height="80" rx="5" class="component-box"/>
+                        <text x="630" y="510" text-anchor="middle" class="component-title">DeleteService</text>
+                        <text x="630" y="530" text-anchor="middle" class="component-desc">データ削除</text>
+                    </g>
+                    
+                    <g class="component" data-component="restore-service" tabindex="0">
+                        <rect x="760" y="480" width="180" height="80" rx="5" class="component-box"/>
+                        <text x="850" y="510" text-anchor="middle" class="component-title">RestoreService</text>
+                        <text x="850" y="530" text-anchor="middle" class="component-desc">データ復元</text>
+                    </g>
+                </g>
+
+                <!-- データベース層 -->
+                <g class="layer database-layer" data-layer="database">
+                    <rect x="50" y="650" width="1100" height="100" rx="10" class="layer-bg database-bg"/>
+                    <text x="600" y="635" text-anchor="middle" class="layer-title">データベース層</text>
+                    
+                    <g class="component" data-component="postgresql" tabindex="0">
+                        <rect x="300" y="670" width="300" height="60" rx="5" class="component-box"/>
+                        <text x="450" y="695" text-anchor="middle" class="component-title">PostgreSQL</text>
+                        <text x="450" y="715" text-anchor="middle" class="component-desc">リレーショナルデータベース</text>
+                    </g>
+                    
+                    <g class="component" data-component="psycopg2" tabindex="0">
+                        <rect x="650" y="670" width="200" height="60" rx="5" class="component-box"/>
+                        <text x="750" y="695" text-anchor="middle" class="component-title">psycopg2</text>
+                        <text x="750" y="715" text-anchor="middle" class="component-desc">DB接続ライブラリ</text>
+                    </g>
+                </g>
+
+                <!-- データフロー矢印 -->
+                <g class="data-flow">
+                    <defs>
+                        <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+                            <polygon points="0 0, 10 3.5, 0 7" class="arrow"/>
+                        </marker>
+                    </defs>
+                    
+                    <!-- フロントエンド → API -->
+                    <path d="M 600 200 L 600 250" class="flow-arrow" marker-end="url(#arrowhead)"/>
+                    <text x="620" y="225" class="flow-label">HTTP Request</text>
+                    
+                    <!-- API → サービス -->
+                    <path d="M 600 400 L 600 450" class="flow-arrow" marker-end="url(#arrowhead)"/>
+                    <text x="620" y="425" class="flow-label">Function Call</text>
+                    
+                    <!-- サービス → データベース -->
+                    <path d="M 600 600 L 600 650" class="flow-arrow" marker-end="url(#arrowhead)"/>
+                    <text x="620" y="625" class="flow-label">SQL Query</text>
+                </g>
+            </svg>
+        </div>
+
+        <!-- 詳細情報モーダル -->
+        <div class="modal" id="detail-modal">
+            <div class="modal-content">
+                <button class="modal-close" aria-label="モーダルを閉じる">&times;</button>
+                <div class="modal-body" id="modal-body">
+                    <!-- 動的コンテンツ -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="{{ url_for('static', path='/js/navigation.js') }}"></script>
+    <script src="{{ url_for('static', path='/js/diagram.js') }}"></script>
+</body>
+</html>

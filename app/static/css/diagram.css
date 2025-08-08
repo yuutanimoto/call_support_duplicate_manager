@@ -1,0 +1,419 @@
+/* システム構成図専用スタイル */
+.diagram-container {
+    padding: 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.page-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.page-header h1 {
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+}
+
+.page-header p {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+}
+
+/* 制御ボタン */
+.diagram-controls {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+}
+
+.control-btn {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.control-btn:hover {
+    background: var(--primary-hover);
+    transform: translateY(-2px);
+}
+
+.control-btn:active {
+    transform: translateY(0);
+}
+
+/* 構成図コンテナ */
+.diagram-wrapper {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 1rem;
+    overflow: auto;
+    position: relative;
+    min-height: 600px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.architecture-diagram {
+    width: 100%;
+    height: auto;
+    transition: transform 0.3s ease;
+    cursor: grab;
+}
+
+.architecture-diagram:active {
+    cursor: grabbing;
+}
+
+/* 層スタイル */
+.layer-bg {
+    fill: #f8f9fa;
+    stroke: #dee2e6;
+    stroke-width: 2;
+    transition: all 0.3s ease;
+}
+
+.frontend-bg {
+    fill: #e3f2fd;
+    stroke: #2196f3;
+}
+
+.api-bg {
+    fill: #f3e5f5;
+    stroke: #9c27b0;
+}
+
+.service-bg {
+    fill: #e8f5e8;
+    stroke: #4caf50;
+}
+
+.database-bg {
+    fill: #fff3e0;
+    stroke: #ff9800;
+}
+
+/* 層タイトル */
+.layer-title {
+    font-size: 18px;
+    font-weight: bold;
+    fill: #333;
+}
+
+/* コンポーネントスタイル */
+.component-box {
+    fill: white;
+    stroke: #666;
+    stroke-width: 1;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.component:hover .component-box,
+.component:focus .component-box {
+    stroke: var(--primary-color);
+    stroke-width: 2;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
+}
+
+.component-title {
+    font-size: 14px;
+    font-weight: bold;
+    fill: #333;
+    pointer-events: none;
+}
+
+.component-desc {
+    font-size: 11px;
+    fill: #666;
+    pointer-events: none;
+}
+
+/* データフロー */
+.flow-arrow {
+    stroke: var(--primary-color);
+    stroke-width: 2;
+    fill: none;
+    animation: flow 2s ease-in-out infinite;
+}
+
+.arrow {
+    fill: var(--primary-color);
+}
+
+.flow-label {
+    font-size: 12px;
+    fill: #666;
+    text-anchor: middle;
+}
+
+@keyframes flow {
+    0%, 100% { stroke-dasharray: 5, 5; stroke-dashoffset: 0; }
+    50% { stroke-dashoffset: 10; }
+}
+
+/* モーダル */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 1000;
+}
+
+.modal.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background: white;
+    border-radius: 8px;
+    max-width: 600px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    position: relative;
+    animation: modalAppear 0.3s ease;
+}
+
+@keyframes modalAppear {
+    from { transform: scale(0.7); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+.modal-close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #666;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s;
+}
+
+.modal-close:hover {
+    background-color: #f5f5f5;
+}
+
+.modal-body {
+    padding: 2rem;
+}
+
+.modal-body h2 {
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+.modal-body h3 {
+    color: #333;
+    margin: 1.5rem 0 0.5rem;
+}
+
+.modal-body ul {
+    list-style-type: disc;
+    margin-left: 1.5rem;
+}
+
+.modal-body li {
+    margin-bottom: 0.5rem;
+    color: #666;
+}
+
+.component-description {
+    font-size: 1.1rem;
+    color: #666;
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+}
+
+.tech-list, .feature-list {
+    margin-bottom: 1rem;
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+    .diagram-container {
+        padding: 1rem;
+    }
+    
+    .diagram-controls {
+        gap: 0.5rem;
+    }
+    
+    .control-btn {
+        flex: 1;
+        min-width: 80px;
+        padding: 0.5rem 1rem;
+        font-size: 0.8rem;
+    }
+    
+    .diagram-wrapper {
+        padding: 0.5rem;
+    }
+    
+    .architecture-diagram {
+        min-width: 800px;
+    }
+    
+    .modal-content {
+        width: 95%;
+        max-height: 90vh;
+    }
+    
+    .modal-body {
+        padding: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .page-header h1 {
+        font-size: 1.5rem;
+    }
+    
+    .page-header p {
+        font-size: 0.9rem;
+    }
+    
+    .diagram-controls {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.5rem;
+    }
+    
+    .control-btn {
+        min-width: auto;
+    }
+}
+
+/* アクセシビリティ */
+.component[tabindex="0"]:focus {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+}
+
+.component[tabindex="0"]:focus .component-box {
+    stroke: var(--primary-color);
+    stroke-width: 3;
+}
+
+/* ハイコントラストモード対応 */
+@media (prefers-contrast: high) {
+    .layer-bg {
+        stroke-width: 3;
+    }
+    
+    .component-box {
+        stroke-width: 2;
+    }
+    
+    .component:hover .component-box,
+    .component:focus .component-box {
+        stroke-width: 4;
+    }
+}
+
+/* モーション設定を尊重 */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+    
+    .flow-arrow {
+        animation: none;
+    }
+}
+
+/* 印刷スタイル */
+@media print {
+    .main-navigation,
+    .breadcrumbs,
+    .diagram-controls {
+        display: none;
+    }
+    
+    .diagram-container {
+        padding: 0;
+        max-width: none;
+    }
+    
+    .diagram-wrapper {
+        border: none;
+        box-shadow: none;
+        overflow: visible;
+    }
+    
+    .architecture-diagram {
+        max-width: 100%;
+        height: auto;
+    }
+}
+
+/* テーマ変数が定義されていない場合の fallback */
+:root {
+    --primary-color: #007bff;
+    --primary-hover: #0056b3;
+    --text-secondary: #6c757d;
+}
+
+/* ダークモード対応準備 */
+@media (prefers-color-scheme: dark) {
+    .diagram-wrapper {
+        background: #2d3748;
+        border-color: #4a5568;
+    }
+    
+    .layer-bg {
+        fill: #4a5568;
+        stroke: #718096;
+    }
+    
+    .component-box {
+        fill: #2d3748;
+        stroke: #a0aec0;
+    }
+    
+    .layer-title,
+    .component-title {
+        fill: #f7fafc;
+    }
+    
+    .component-desc,
+    .flow-label {
+        fill: #cbd5e0;
+    }
+}
+
+/* フルスクリーン時のスタイル */
+.diagram-wrapper:fullscreen {
+    background: black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.diagram-wrapper:fullscreen .architecture-diagram {
+    max-width: 90%;
+    max-height: 90%;
+}
