@@ -16,6 +16,21 @@ class DuplicateManagementApp {
         this.displayMode = 'normal';   // 'normal' or 'duplicate'
         this.currentDuplicateType = null;
         this.duplicateData = null;
+        
+        // 重複モード用のページング状態
+        this.duplicateAllData = [];    // 全重複データを保持
+        this.duplicateOffset = 0;      // 重複モードのオフセット
+        this.duplicateHasMore = false; // 重複モードの追加データ有無
+        
+        // ページング情報
+        this.pagination = {
+            currentPage: 1,
+            totalPages: 1,
+            pageSize: 100,
+            totalCount: 0,
+            startIndex: 0,
+            endIndex: 0
+        };
 
         this.init();
     }
@@ -264,6 +279,70 @@ class DuplicateManagementApp {
         if (dataRangeElement) {
             dataRangeElement.textContent = `${startIndex}-${endIndex}件目`;
         }
+        
+        // ページネーション情報を更新
+        this.updatePaginationInfo();
+    }
+    
+    updatePaginationInfo() {
+        const pageSize = this.getPageSize();
+        this.pagination.pageSize = pageSize;
+        
+        // 総ページ数の計算
+        this.pagination.totalPages = Math.ceil(this.totalCount / pageSize) || 1;
+        
+        // 現在のページ番号の計算
+        if (this.displayMode === 'normal') {
+            this.pagination.currentPage = Math.floor(this.currentOffset / pageSize) + 1;
+        } else {
+            this.pagination.currentPage = Math.floor(this.duplicateOffset / pageSize) + 1;
+        }
+        
+        // 表示範囲の計算
+        if (this.totalCount === 0) {
+            this.pagination.startIndex = 0;
+            this.pagination.endIndex = 0;
+        } else {
+            this.pagination.startIndex = (this.pagination.currentPage - 1) * pageSize + 1;
+            this.pagination.endIndex = Math.min(
+                this.pagination.startIndex + this.currentData.length - 1,
+                this.totalCount
+            );
+        }
+        
+        // UI更新
+        this.updatePaginationUI();
+    }
+    
+    updatePaginationUI() {
+        const paginationText = document.getElementById("pagination-text");
+        const currentPageSpan = document.getElementById("current-page");
+        const totalPagesSpan = document.getElementById("total-pages");
+        
+        if (this.totalCount === 0) {
+            paginationText.textContent = "データがありません";
+        } else {
+            paginationText.textContent = 
+                `全${this.totalCount.toLocaleString()}件中 ${this.pagination.startIndex.toLocaleString()}-${this.pagination.endIndex.toLocaleString()}件を表示`;
+        }
+        
+        currentPageSpan.textContent = this.pagination.currentPage;
+        totalPagesSpan.textContent = this.pagination.totalPages;
+        
+        // ボタンの有効/無効制御
+        this.updatePaginationButtons();
+    }
+    
+    updatePaginationButtons() {
+        const firstBtn = document.getElementById("first-page-btn");
+        const prevBtn = document.getElementById("prev-page-btn");
+        const nextBtn = document.getElementById("next-page-btn");
+        const lastBtn = document.getElementById("last-page-btn");
+        
+        firstBtn.disabled = this.pagination.currentPage === 1;
+        prevBtn.disabled = this.pagination.currentPage === 1;
+        nextBtn.disabled = this.pagination.currentPage === this.pagination.totalPages;
+        lastBtn.disabled = this.pagination.currentPage === this.pagination.totalPages;
     }
 
     updateStatisticsDisplay() {
@@ -427,7 +506,12 @@ class DuplicateManagementApp {
 
         // ページサイズ変更
         document.getElementById("page-size").addEventListener("change", () => {
-            this.loadData(0, false);
+            this.pagination.currentPage = 1;  // 最初のページに戻る
+            if (this.displayMode === 'normal') {
+                this.loadData(0, false);
+            } else {
+                this.displayDuplicatePage(0, false);
+            }
         });
 
         // 削除済み表示チェックボックス
@@ -438,20 +522,55 @@ class DuplicateManagementApp {
 
         // 自動スクロール
         this.setupAutoScroll();
+        
+        // ページングボタンのイベント設定
+        this.setupPaginationEvents();
+    }
+    
+    setupPaginationEvents() {
+        // ページングボタン
+        document.getElementById("first-page-btn").addEventListener("click", () => {
+            this.goToFirstPage();
+        });
+        
+        document.getElementById("prev-page-btn").addEventListener("click", () => {
+            this.goToPrevPage();
+        });
+        
+        document.getElementById("next-page-btn").addEventListener("click", () => {
+            this.goToNextPage();
+        });
+        
+        document.getElementById("last-page-btn").addEventListener("click", () => {
+            this.goToLastPage();
+        });
     }
 
     setupAutoScroll() {
         const tableContainer = document.getElementById("table-container");
 
         tableContainer.addEventListener("scroll", () => {
-            // 重複モード中は自動読み込みを無効化
-            if (this.isDuplicateMode || !this.hasMore || this.isLoading) return;
-
+            // TableManagerの自動スクロール設定を確認
+            const isAutoScrollEnabled = this.tableManager?.settings?.autoScroll ?? true;
+            
+            // 自動スクロールが無効の場合は処理しない
+            if (!isAutoScrollEnabled) {
+                return;
+            }
+            
+            // 読み込み中は処理しない
+            if (this.isLoading) return;
+            
             const { scrollTop, scrollHeight, clientHeight } = tableContainer;
             const threshold = 200;
 
             if (scrollTop + clientHeight >= scrollHeight - threshold) {
-                this.loadMoreData();
+                // 通常モードと重複モードで処理を分岐
+                if (this.displayMode === 'normal' && this.hasMore) {
+                    this.loadMoreData();
+                } else if (this.displayMode === 'duplicate' && this.duplicateHasMore) {
+                    this.loadMoreDuplicateData();
+                }
             }
         });
     }
@@ -466,6 +585,22 @@ class DuplicateManagementApp {
             await this.loadData(newOffset, true);
         } catch (error) {
             console.error("追加データ読み込みエラー:", error);
+        } finally {
+            this.isLoading = false;
+        }
+    }
+    
+    async loadMoreDuplicateData() {
+        // 重複モード用の追加データ読み込み
+        if (!this.duplicateHasMore || this.isLoading) return;
+        
+        this.isLoading = true;
+        try {
+            const pageSize = this.getPageSize();
+            const newOffset = this.duplicateOffset + pageSize;
+            this.displayDuplicatePage(newOffset, true);
+        } catch (error) {
+            console.error("重複データ追加読み込みエラー:", error);
         } finally {
             this.isLoading = false;
         }
@@ -580,41 +715,50 @@ class DuplicateManagementApp {
     }
 
     displayDuplicates(duplicateData) {
-        const flattenedData = [];
-        const maxDisplayLimit = 500;  // 最大表示件数
-
+        // 全重複データをフラット化して保持
+        this.duplicateAllData = [];
         duplicateData.duplicates.forEach(group => {
             group.records.forEach(record => {
-                if (flattenedData.length < maxDisplayLimit) {
-                    record.duplicate_group = group.group_id;
-                    flattenedData.push(record);
-                }
+                record.duplicate_group = group.group_id;
+                this.duplicateAllData.push(record);
             });
         });
 
-        this.currentData = flattenedData;
-        this.totalCount = duplicateData.total_duplicates;
-        this.selectedIds.clear();
-
-        // 重複データ表示時は自動読み込みを無効化
+        this.totalCount = this.duplicateAllData.length;
         this.isDuplicateMode = true;
-        this.hasMore = false;
-        this.currentOffset = 0;
-
+        this.selectedIds.clear();
+        
+        // ページング情報を初期化
+        this.pagination.currentPage = 1;
+        this.pagination.totalCount = this.totalCount;
+        this.duplicateOffset = 0;
+        
+        // 最初のページを表示
+        this.displayDuplicatePage(0, false);
+    }
+    
+    displayDuplicatePage(offset, append = false) {
+        const pageSize = this.getPageSize();
+        const startIdx = offset;
+        const endIdx = Math.min(offset + pageSize, this.duplicateAllData.length);
+        
+        if (append) {
+            // 追加読み込みの場合
+            const newData = this.duplicateAllData.slice(startIdx, endIdx);
+            this.currentData = [...this.currentData, ...newData];
+        } else {
+            // 新規読み込みの場合
+            this.currentData = this.duplicateAllData.slice(startIdx, endIdx);
+        }
+        
+        this.duplicateOffset = offset;
+        this.duplicateHasMore = endIdx < this.duplicateAllData.length;
+        this.currentOffset = offset;  // 互換性のため
+        this.hasMore = false;  // 通常モードの自動スクロールを無効化
+        
         this.renderTable();
         this.updateCounts();
-
-        // 制限メッセージの表示（必要時のみ）
-        const isLimited = duplicateData.total_duplicates > maxDisplayLimit;
-        const displayCount = Math.min(duplicateData.total_duplicates, maxDisplayLimit);
-        
-        if (isLimited) {
-            this.showWarning(
-                `パフォーマンス向上のため、${displayCount}件のみ表示しています。` +
-                `より詳細な検索条件を設定することをお勧めします。`
-            );
-        }
-        // 成功通知は削除（統計パネルで表現）
+        this.updatePaginationInfo();
     }
 
     selectAll() {
@@ -731,6 +875,36 @@ class DuplicateManagementApp {
                 indicator.classList.add("hidden");
             }
         }
+    }
+
+    // ページ遷移メソッド
+    async goToPage(pageNumber) {
+        if (pageNumber < 1 || pageNumber > this.pagination.totalPages) return;
+        
+        this.pagination.currentPage = pageNumber;
+        const offset = (pageNumber - 1) * this.pagination.pageSize;
+        
+        if (this.displayMode === 'normal') {
+            await this.loadData(offset, false);
+        } else {
+            this.displayDuplicatePage(offset, false);
+        }
+    }
+    
+    async goToFirstPage() {
+        await this.goToPage(1);
+    }
+    
+    async goToPrevPage() {
+        await this.goToPage(this.pagination.currentPage - 1);
+    }
+    
+    async goToNextPage() {
+        await this.goToPage(this.pagination.currentPage + 1);
+    }
+    
+    async goToLastPage() {
+        await this.goToPage(this.pagination.totalPages);
     }
 
     showError(message) {

@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>重複データ管理システム</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body>
@@ -179,6 +180,30 @@
                             <!-- 動的に生成されるデータ行 -->
                         </tbody>
                     </table>
+                </div>
+                
+                <!-- ページネーションコントロール -->
+                <div class="pagination-controls" id="pagination-controls">
+                    <div class="pagination-info">
+                        <span id="pagination-text">全0件中 0-0件を表示</span>
+                    </div>
+                    <div class="pagination-buttons">
+                        <button id="first-page-btn" class="pagination-btn" disabled>
+                            <i class="fas fa-angle-double-left"></i> 最初
+                        </button>
+                        <button id="prev-page-btn" class="pagination-btn" disabled>
+                            <i class="fas fa-angle-left"></i> 前へ
+                        </button>
+                        <span class="page-number">
+                            ページ <span id="current-page">1</span> / <span id="total-pages">1</span>
+                        </span>
+                        <button id="next-page-btn" class="pagination-btn" disabled>
+                            次へ <i class="fas fa-angle-right"></i>
+                        </button>
+                        <button id="last-page-btn" class="pagination-btn" disabled>
+                            最後 <i class="fas fa-angle-double-right"></i>
+                        </button>
+                    </div>
                 </div>
             </section>
 

@@ -553,7 +553,7 @@ body {
   overflow: auto;
   border: none;
   border-radius: 0;
-  height: calc(100vh - 320px);
+  max-height: calc(100vh - 380px);
 }
 
 /* データテーブル */
@@ -581,6 +581,55 @@ body {
 .data-table th::before {
   content: none !important;
   display: none !important;
+}
+
+/* ページネーションコントロール */
+.pagination-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background-color: var(--light-color);
+  border-top: 1px solid var(--border-color);
+  margin-top: auto;
+}
+
+.pagination-info {
+  color: var(--secondary-color);
+  font-size: 0.875rem;
+}
+
+.pagination-buttons {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.pagination-btn {
+  padding: 0.5rem 1rem;
+  background-color: white;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.875rem;
+}
+
+.pagination-btn:hover:not(:disabled) {
+  background-color: var(--primary-color);
+  color: white;
+  border-color: var(--primary-color);
+}
+
+.pagination-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.page-number {
+  padding: 0 1rem;
+  font-weight: 500;
+  font-size: 0.875rem;
 }
 
 .data-table td {
