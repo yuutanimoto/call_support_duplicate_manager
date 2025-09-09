@@ -572,27 +572,15 @@ body {
   position: sticky;
   top: 0;
   z-index: 10;
-  cursor: pointer;
+  /* ソート機能はテーブル設定から操作 */
   user-select: none;
 }
 
-.data-table th:hover {
-  background-color: #e9ecef;
-}
-
-.data-table th.sortable::after {
-  content: " ↕";
-  opacity: 0.5;
-}
-
-.data-table th.sort-asc::after {
-  content: " ↑";
-  opacity: 1;
-}
-
-.data-table th.sort-desc::after {
-  content: " ↓";
-  opacity: 1;
+/* 矢印や擬似要素を完全に無効化 */
+.data-table th::after,
+.data-table th::before {
+  content: none !important;
+  display: none !important;
 }
 
 .data-table td {
@@ -626,26 +614,7 @@ body {
   z-index: 11;
 }
 
-/* 列リサイズ */
-.data-table th {
-  position: relative;
-  resize: horizontal;
-  overflow: auto;
-}
-
-.column-resizer {
-  position: absolute;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  width: 4px;
-  cursor: col-resize;
-  background-color: transparent;
-}
-
-.column-resizer:hover {
-  background-color: var(--primary-color);
-}
+/* 列リサイズ機能は削除（テーブル設定から幅を調整） */
 
 
 /* モーダル */

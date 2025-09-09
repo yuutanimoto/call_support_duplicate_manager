@@ -303,32 +303,94 @@
                     </div>
                 </div>
 
-                <h3 id="sorting">ソート</h3>
-                <p>列ヘッダーをクリックしてデータをソートできます。</p>
+                <h3 id="sorting">ソート（並び替え）</h3>
+                <p>データの表示順を自由に設定できます。検索・フィルター実行と重複検出でそれぞれ独立したソート設定が可能です。</p>
                 
                 <div class="sort-demo">
-                    <h4>ソート操作手順</h4>
+                    <h4>📊 ソート設定の種類</h4>
+                    <div class="sort-types">
+                        <div class="sort-type-card">
+                            <h5>🔍 検索・フィルター用ソート</h5>
+                            <p>通常のデータ表示、フィルター適用時のデータの並び順を設定します。</p>
+                            <ul>
+                                <li>最大3つの優先順位で複数列のソート設定が可能</li>
+                                <li>例：「製品」→「更新日時」→「受付日時」の順で並び替え</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="sort-type-card">
+                            <h5>🔄 重複検出用ソート</h5>
+                            <p>重複データ検出時の表示順を設定します。検出タイプごとに個別設定が可能です。</p>
+                            <ul>
+                                <li>完全一致・受付内容・対応状況の3タイプそれぞれに設定可能</li>
+                                <li>重複グループごとにまとまって表示（グループ化は自動）</li>
+                                <li>グループ内でユーザー設定のソートが適用されます</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <h4>⚙️ ソート設定方法</h4>
                     <div class="sort-steps">
                         <div class="sort-step">
                             <span class="sort-step-number">1</span>
-                            <span>ソートしたい列のヘッダーをクリック</span>
+                            <span>画面上部の「テーブル設定」ボタンをクリック</span>
                         </div>
                         <div class="sort-step">
                             <span class="sort-step-number">2</span>
-                            <span>▲（昇順）または▼（降順）アイコンが表示</span>
+                            <span>「ソート設定」セクションで「検索・フィルター用」または「重複検出用」タブを選択</span>
                         </div>
                         <div class="sort-step">
                             <span class="sort-step-number">3</span>
-                            <span>再度クリックでソート順が逆転</span>
+                            <span>各優先度に列と順序（昇順/降順）を設定</span>
+                        </div>
+                        <div class="sort-step">
+                            <span class="sort-step-number">4</span>
+                            <span>「適用」ボタンをクリックして保存</span>
                         </div>
                     </div>
                     
                     <div class="sort-examples">
-                        <h5>ソート例</h5>
+                        <h5>💡 設定例</h5>
+                        <div class="example-grid">
+                            <div class="example-card">
+                                <h6>最新データを優先表示</h6>
+                                <ul>
+                                    <li>優先度1: 受付日時（降順）</li>
+                                    <li>優先度2: なし</li>
+                                    <li>優先度3: なし</li>
+                                </ul>
+                                <p class="example-note">→ 最新の受付から順に表示</p>
+                            </div>
+                            
+                            <div class="example-card">
+                                <h6>製品別に整理して表示</h6>
+                                <ul>
+                                    <li>優先度1: 製品（昇順）</li>
+                                    <li>優先度2: システム種別（昇順）</li>
+                                    <li>優先度3: 受付日時（降順）</li>
+                                </ul>
+                                <p class="example-note">→ 製品・システムごとにまとめて最新順</p>
+                            </div>
+                            
+                            <div class="example-card">
+                                <h6>重複検出時の推奨設定</h6>
+                                <ul>
+                                    <li>優先度1: 受付日時（昇順）</li>
+                                    <li>優先度2: ID（昇順）</li>
+                                    <li>優先度3: なし</li>
+                                </ul>
+                                <p class="example-note">→ 古い順に並べて重複の発生順を確認</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="sort-notes">
+                        <h5>📝 注意事項</h5>
                         <ul>
-                            <li><strong>ID昇順</strong>: 古いデータから新しいデータの順</li>
-                            <li><strong>受付日時降順</strong>: 最新のデータから古いデータの順</li>
-                            <li><strong>進捗</strong>: アルファベット順または登録順</li>
+                            <li>🔸 設定はブラウザに保存され、次回アクセス時も維持されます</li>
+                            <li>🔸 重複検出時は、まず重複内容でグループ化され、その後にソート設定が適用されます</li>
+                            <li>🔸 「デフォルト復元」ボタンで初期設定に戻せます</li>
+                            <li>🔸 複数列ソートは優先度順に適用されます（優先度1→2→3）</li>
                         </ul>
                     </div>
                 </div>

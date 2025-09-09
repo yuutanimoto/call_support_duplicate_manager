@@ -164,7 +164,7 @@ class DuplicateManagementApp {
         columns.forEach(column => {
             const th = document.createElement("th");
             th.textContent = column.name;
-            th.className = "sortable";
+            // ソート機能は無効化（テーブル設定から操作）
             th.dataset.column = column.id;
             tableHeader.appendChild(th);
         });

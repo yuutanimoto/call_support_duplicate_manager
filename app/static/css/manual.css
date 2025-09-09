@@ -46,6 +46,115 @@
     color: var(--primary-color);
 }
 
+/* ソート関連のスタイル */
+.sort-types {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin: 1.5rem 0;
+}
+
+.sort-type-card {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 1.5rem;
+}
+
+.sort-type-card h5 {
+    color: var(--primary-color);
+    margin-bottom: 0.75rem;
+    font-size: 1.1rem;
+}
+
+.sort-type-card p {
+    margin-bottom: 1rem;
+    color: #495057;
+}
+
+.sort-type-card ul {
+    margin: 0;
+    padding-left: 1.5rem;
+}
+
+.sort-type-card li {
+    margin-bottom: 0.5rem;
+    color: #6c757d;
+}
+
+.example-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin: 1.5rem 0;
+}
+
+.example-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 8px;
+    padding: 1.25rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.example-card h6 {
+    font-size: 1rem;
+    margin-bottom: 0.75rem;
+    font-weight: 600;
+}
+
+.example-card ul {
+    margin: 0.5rem 0;
+    padding-left: 1.25rem;
+    list-style: none;
+}
+
+.example-card li {
+    position: relative;
+    margin-bottom: 0.25rem;
+    padding-left: 1rem;
+}
+
+.example-card li:before {
+    content: "▸";
+    position: absolute;
+    left: 0;
+}
+
+.example-note {
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.3);
+    font-size: 0.9rem;
+    opacity: 0.95;
+    font-style: italic;
+}
+
+.sort-notes {
+    background: #fff3cd;
+    border: 1px solid #ffc107;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin: 2rem 0;
+}
+
+.sort-notes h5 {
+    color: #856404;
+    margin-bottom: 1rem;
+}
+
+.sort-notes ul {
+    margin: 0;
+    padding-left: 1.5rem;
+    list-style: none;
+}
+
+.sort-notes li {
+    margin-bottom: 0.5rem;
+    color: #856404;
+    line-height: 1.6;
+}
+
 /* 検索ボックス */
 .search-box {
     position: relative;
