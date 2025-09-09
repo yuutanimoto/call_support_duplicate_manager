@@ -253,7 +253,31 @@
                         <div class="step-content">
                             <h4>ページング</h4>
                             <p>大量データは自動的にページ分割されます。</p>
-                            <div class="tip">💡 下にスクロールすると自動的に追加データが読み込まれます</div>
+                            <div class="feature-list">
+                                <div class="feature-item">
+                                    <strong>自動スクロール</strong>
+                                    <ul>
+                                        <li>テーブル下部までスクロールすると自動的に次のデータを読み込み</li>
+                                        <li>テーブル設定で有効/無効を切り替え可能</li>
+                                    </ul>
+                                </div>
+                                <div class="feature-item">
+                                    <strong>手動ページング</strong>
+                                    <ul>
+                                        <li>テーブル下部のボタンで「最初」「前へ」「次へ」「最後」に移動</li>
+                                        <li>現在のページ番号と総ページ数を表示</li>
+                                        <li>「全XX件中 XX-XX件を表示」で現在位置を確認</li>
+                                    </ul>
+                                </div>
+                                <div class="feature-item">
+                                    <strong>ページサイズ変更</strong>
+                                    <ul>
+                                        <li>50/100/200/300/500件から選択可能</li>
+                                        <li>変更すると最初のページに戻ります</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="tip">💡 重複検出モードでも同様のページング機能が利用できます</div>
                         </div>
                     </div>
                 </div>
@@ -671,6 +695,43 @@
             <section id="advanced-features" class="manual-section">
                 <h2>高度な機能</h2>
                 
+                <h3>📋 テーブル設定</h3>
+                <p>テーブルの表示をカスタマイズできます。設定はLocalStorageに保存され、次回アクセス時も維持されます。</p>
+                
+                <div class="table-settings-info">
+                    <h4>設定可能な項目</h4>
+                    <div class="settings-grid">
+                        <div class="setting-item">
+                            <h5>🔲 列の表示/非表示</h5>
+                            <p>必要な列のみを表示し、不要な列を非表示にできます</p>
+                        </div>
+                        <div class="setting-item">
+                            <h5>📏 列幅の調整</h5>
+                            <p>各列の幅を個別に設定可能（ピクセル単位）</p>
+                        </div>
+                        <div class="setting-item">
+                            <h5>📄 ページサイズ</h5>
+                            <p>1ページあたりの表示件数を変更（50/100/200/300/500件）</p>
+                        </div>
+                        <div class="setting-item">
+                            <h5>🔄 自動スクロール</h5>
+                            <p>スクロール時の自動データ読み込みの有効/無効</p>
+                        </div>
+                        <div class="setting-item">
+                            <h5>⬆️⬇️ ソート設定</h5>
+                            <p>検索・フィルター用と重複検出用で個別に設定可能</p>
+                            <ul>
+                                <li>最大3つの優先度でソート</li>
+                                <li>重複検出は3タイプそれぞれに設定</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <h4>設定の保存</h4>
+                    <p>「設定を保存」ボタンをクリックすると、設定がブラウザのLocalStorageに保存されます。</p>
+                    <div class="warning">⚠️ ブラウザのキャッシュをクリアすると設定もリセットされます</div>
+                </div>
+                
                 <h3>⌨️ キーボードショートカット</h3>
                 <div class="shortcut-table">
                     <table>
@@ -1018,6 +1079,40 @@
                                 <li>操作前の確認ダイアログ</li>
                             </ul>
                             <p><strong>推奨:</strong> 重要な操作前には必要に応じて画面キャプチャやCSVエクスポートでの手動バックアップも検討してください。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <h3 class="faq-question">Q: 自動スクロールが動作しません</h3>
+                    <div class="faq-answer">
+                        <p><strong>A:</strong> 以下の点を確認してください：</p>
+                        <div class="faq-detail">
+                            <ul>
+                                <li><strong>設定確認:</strong> テーブル設定で「自動スクロール有効」がチェックされているか確認</li>
+                                <li><strong>データ有無:</strong> 全データが表示済みの場合は追加読み込みされません</li>
+                                <li><strong>モード確認:</strong> 重複検出モードでも自動スクロールは動作します</li>
+                                <li><strong>手動操作:</strong> テーブル下部のページングボタンで手動移動も可能です</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <h3 class="faq-question">Q: ソート設定が反映されません</h3>
+                    <div class="faq-answer">
+                        <p><strong>A:</strong> ソート設定はテーブル設定ウィンドウから行う必要があります：</p>
+                        <div class="faq-detail">
+                            <p><strong>手順:</strong></p>
+                            <ol>
+                                <li>画面上部の「テーブル設定」ボタンをクリック</li>
+                                <li>「ソート設定」セクションを開く</li>
+                                <li>「検索・フィルター用」または「重複検出用」タブを選択</li>
+                                <li>優先度1〜3に列と順序を設定</li>
+                                <li>「設定を保存」をクリック</li>
+                                <li>フィルター実行または重複検出を再実行</li>
+                            </ol>
+                            <p><strong>注意:</strong> テーブルヘッダーのクリックではソートできません</p>
                         </div>
                     </div>
                 </div>
