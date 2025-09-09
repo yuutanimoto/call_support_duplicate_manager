@@ -10,6 +10,8 @@ router = APIRouter()
 @router.get("/duplicates/{duplicate_type}", response_model=DuplicatesResponse)
 async def detect_duplicates(
     duplicate_type: str = Path(..., regex="^(exact|content|status)$", description="重複タイプ"),
+    sort_by: Optional[str] = Query(None, description="ソート列（カンマ区切り）"),
+    sort_order: Optional[str] = Query(None, description="ソート順（カンマ区切り）"),
     keyword: Optional[str] = Query(None, description="キーワード検索（後方互換性）"),
     content_keyword: Optional[str] = Query(None, description="受付内容キーワード"),
     status_keyword: Optional[str] = Query(None, description="対応状況キーワード"),
@@ -23,6 +25,15 @@ async def detect_duplicates(
 ):
     """重複データ検出API"""
     try:
+        # ソートパラメータの検証（セキュリティ対策）
+        if sort_order:
+            # カンマ区切りの各要素が asc または desc であることを確認
+            sort_orders = [s.strip().lower() for s in sort_order.split(',')]
+            for order in sort_orders:
+                if order not in ('asc', 'desc'):
+                    raise HTTPException(status_code=400, detail=f"Invalid sort order: {order}")
+            sort_order = ','.join(sort_orders)
+        
         # 日付文字列をdatetimeオブジェクトに変換
         date_from_dt = None
         date_to_dt = None
@@ -47,8 +58,13 @@ async def detect_duplicates(
                 include_deleted=include_deleted
             )
 
-        # 重複検出
-        duplicate_groups = DuplicateService.detect_duplicates(duplicate_type, filters)
+        # 重複検出（ソート情報を渡す）
+        duplicate_groups = DuplicateService.detect_duplicates(
+            duplicate_type, 
+            filters,
+            sort_by=sort_by,
+            sort_order=sort_order
+        )
 
         total_duplicates = sum(len(group.records) for group in duplicate_groups)
 

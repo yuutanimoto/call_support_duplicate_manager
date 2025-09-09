@@ -18,6 +18,30 @@ class TableManager {
             defaultSort: {
                 column: 'reception_datetime',
                 direction: 'desc'
+            },
+            // 検索・フィルター用ソート設定
+            searchSort: {
+                priority1: { column: 'reception_datetime', direction: 'desc' },
+                priority2: { column: null, direction: 'asc' },
+                priority3: { column: null, direction: 'asc' }
+            },
+            // 重複検出用ソート設定（タイプ別）
+            duplicateSort: {
+                exact: {
+                    priority1: { column: 'reception_datetime', direction: 'desc' },
+                    priority2: { column: null, direction: 'asc' },
+                    priority3: { column: null, direction: 'asc' }
+                },
+                content: {
+                    priority1: { column: 'reception_datetime', direction: 'desc' },
+                    priority2: { column: null, direction: 'asc' },
+                    priority3: { column: null, direction: 'asc' }
+                },
+                status: {
+                    priority1: { column: 'reception_datetime', direction: 'desc' },
+                    priority2: { column: null, direction: 'asc' },
+                    priority3: { column: null, direction: 'asc' }
+                }
             }
         };
         
@@ -69,6 +93,44 @@ class TableManager {
                     this.closeSettingsModal();
                 }
             });
+        }
+        
+        // ソートタブ切り替え
+        const tabButtons = document.querySelectorAll(".sort-tabs .tab-button");
+        tabButtons.forEach(button => {
+            button.addEventListener("click", (e) => {
+                this.switchSortTab(e.target.dataset.tab);
+            });
+        });
+        
+        // 重複検出タイプ変更時
+        const dupSortTypeSelect = document.getElementById("duplicate-sort-type");
+        if (dupSortTypeSelect) {
+            dupSortTypeSelect.addEventListener("change", () => {
+                this.loadDuplicateSortSettings(dupSortTypeSelect.value);
+            });
+        }
+    }
+    
+    switchSortTab(tab) {
+        // タブボタンのアクティブ状態を切り替え
+        document.querySelectorAll(".sort-tabs .tab-button").forEach(button => {
+            button.classList.toggle("active", button.dataset.tab === tab);
+        });
+        
+        // パネルの表示を切り替え
+        const searchPanel = document.getElementById("search-sort-panel");
+        const duplicatePanel = document.getElementById("duplicate-sort-panel");
+        
+        if (tab === "search") {
+            searchPanel.style.display = "block";
+            duplicatePanel.style.display = "none";
+        } else {
+            searchPanel.style.display = "none";
+            duplicatePanel.style.display = "block";
+            // 重複検出タイプの設定を読み込み
+            const dupType = document.getElementById("duplicate-sort-type").value;
+            this.loadDuplicateSortSettings(dupType);
         }
     }
     
@@ -147,35 +209,69 @@ class TableManager {
     }
     
     populateSortSettings() {
-        const sortColumnSelect = document.getElementById("default-sort-column");
-        const sortDirectionSelect = document.getElementById("default-sort-direction");
+        // 列オプションの共通リスト
+        const columns = [
+            { id: "", name: "なし" },
+            { id: "id", name: "ID" },
+            { id: "content", name: "受付内容" },
+            { id: "status", name: "対応状況" },
+            { id: "progress", name: "進捗" },
+            { id: "system_type", name: "システム種別" },
+            { id: "product", name: "製品" },
+            { id: "reception_datetime", name: "受付日時" },
+            { id: "update_datetime", name: "更新日時" }
+        ];
         
-        if (sortColumnSelect) {
-            // ソート列オプションを動的生成
-            sortColumnSelect.innerHTML = "";
-            const columns = [
-                { id: "id", name: "ID" },
-                { id: "content", name: "受付内容" },
-                { id: "status", name: "対応状況" },
-                { id: "progress", name: "進捗" },
-                { id: "system_type", name: "システム種別" },
-                { id: "product", name: "製品" },
-                { id: "reception_datetime", name: "受付日時" },
-                { id: "update_datetime", name: "更新日時" }
-            ];
-            
+        // すべてのソート列選択要素を取得してオプションを設定
+        document.querySelectorAll(".sort-column-select").forEach(select => {
+            select.innerHTML = "";
             columns.forEach(column => {
                 const option = document.createElement("option");
                 option.value = column.id;
                 option.textContent = column.name;
-                sortColumnSelect.appendChild(option);
+                select.appendChild(option);
             });
-            
-            sortColumnSelect.value = this.settings.defaultSort.column;
-        }
+        });
         
-        if (sortDirectionSelect) {
-            sortDirectionSelect.value = this.settings.defaultSort.direction;
+        // 検索・フィルター用ソート設定を読み込み
+        this.loadSearchSortSettings();
+        
+        // 重複検出用ソート設定を読み込み（デフォルトは完全一致）
+        this.loadDuplicateSortSettings("exact");
+    }
+    
+    loadSearchSortSettings() {
+        const searchSort = this.settings.searchSort || this.defaultSettings.searchSort;
+        
+        for (let i = 1; i <= 3; i++) {
+            const priority = searchSort[`priority${i}`];
+            const colSelect = document.getElementById(`search-sort-col-${i}`);
+            const dirSelect = document.getElementById(`search-sort-dir-${i}`);
+            
+            if (colSelect && priority) {
+                colSelect.value = priority.column || "";
+            }
+            if (dirSelect && priority) {
+                dirSelect.value = priority.direction || "asc";
+            }
+        }
+    }
+    
+    loadDuplicateSortSettings(duplicateType) {
+        const duplicateSort = this.settings.duplicateSort || this.defaultSettings.duplicateSort;
+        const typeSort = duplicateSort[duplicateType] || duplicateSort.exact;
+        
+        for (let i = 1; i <= 3; i++) {
+            const priority = typeSort[`priority${i}`];
+            const colSelect = document.getElementById(`dup-sort-col-${i}`);
+            const dirSelect = document.getElementById(`dup-sort-dir-${i}`);
+            
+            if (colSelect && priority) {
+                colSelect.value = priority.column || "";
+            }
+            if (dirSelect && priority) {
+                dirSelect.value = priority.direction || "asc";
+            }
         }
     }
     
@@ -206,13 +302,40 @@ class TableManager {
             this.settings.autoScroll = autoScrollCheckbox.checked;
         }
         
-        // ソート設定の取得
-        const sortColumnSelect = document.getElementById("default-sort-column");
-        const sortDirectionSelect = document.getElementById("default-sort-direction");
+        // 検索・フィルター用ソート設定の保存
+        for (let i = 1; i <= 3; i++) {
+            const colSelect = document.getElementById(`search-sort-col-${i}`);
+            const dirSelect = document.getElementById(`search-sort-dir-${i}`);
+            
+            if (colSelect && dirSelect) {
+                if (!this.settings.searchSort) {
+                    this.settings.searchSort = JSON.parse(JSON.stringify(this.defaultSettings.searchSort));
+                }
+                this.settings.searchSort[`priority${i}`] = {
+                    column: colSelect.value || null,
+                    direction: dirSelect.value || "asc"
+                };
+            }
+        }
         
-        if (sortColumnSelect && sortDirectionSelect) {
-            this.settings.defaultSort.column = sortColumnSelect.value;
-            this.settings.defaultSort.direction = sortDirectionSelect.value;
+        // 重複検出用ソート設定の保存
+        const dupType = document.getElementById("duplicate-sort-type").value;
+        for (let i = 1; i <= 3; i++) {
+            const colSelect = document.getElementById(`dup-sort-col-${i}`);
+            const dirSelect = document.getElementById(`dup-sort-dir-${i}`);
+            
+            if (colSelect && dirSelect) {
+                if (!this.settings.duplicateSort) {
+                    this.settings.duplicateSort = JSON.parse(JSON.stringify(this.defaultSettings.duplicateSort));
+                }
+                if (!this.settings.duplicateSort[dupType]) {
+                    this.settings.duplicateSort[dupType] = JSON.parse(JSON.stringify(this.defaultSettings.duplicateSort[dupType]));
+                }
+                this.settings.duplicateSort[dupType][`priority${i}`] = {
+                    column: colSelect.value || null,
+                    direction: dirSelect.value || "asc"
+                };
+            }
         }
         
         this.saveSettings();
@@ -335,6 +458,30 @@ class TableManager {
             defaultSort: {
                 column: 'reception_datetime',
                 direction: 'desc'
+            },
+            // 検索・フィルター用ソート設定
+            searchSort: {
+                priority1: { column: 'reception_datetime', direction: 'desc' },
+                priority2: { column: null, direction: 'asc' },
+                priority3: { column: null, direction: 'asc' }
+            },
+            // 重複検出用ソート設定（タイプ別）
+            duplicateSort: {
+                exact: {
+                    priority1: { column: 'reception_datetime', direction: 'desc' },
+                    priority2: { column: null, direction: 'asc' },
+                    priority3: { column: null, direction: 'asc' }
+                },
+                content: {
+                    priority1: { column: 'reception_datetime', direction: 'desc' },
+                    priority2: { column: null, direction: 'asc' },
+                    priority3: { column: null, direction: 'asc' }
+                },
+                status: {
+                    priority1: { column: 'reception_datetime', direction: 'desc' },
+                    priority2: { column: null, direction: 'asc' },
+                    priority3: { column: null, direction: 'asc' }
+                }
             }
         };
     }
@@ -354,6 +501,82 @@ class TableManager {
         if (saved.autoScroll !== undefined) result.autoScroll = saved.autoScroll;
         if (saved.defaultSort) result.defaultSort = { ...result.defaultSort, ...saved.defaultSort };
         
+        // 新しいソート設定のマージ
+        if (saved.searchSort) {
+            result.searchSort = this.mergeSortSettings(result.searchSort, saved.searchSort);
+        }
+        if (saved.duplicateSort) {
+            Object.keys(result.duplicateSort).forEach(type => {
+                if (saved.duplicateSort && saved.duplicateSort[type]) {
+                    result.duplicateSort[type] = this.mergeSortSettings(result.duplicateSort[type], saved.duplicateSort[type]);
+                }
+            });
+        }
+        
         return result;
+    }
+    
+    mergeSortSettings(defaultSort, savedSort) {
+        const merged = { ...defaultSort };
+        for (let i = 1; i <= 3; i++) {
+            const key = `priority${i}`;
+            if (savedSort[key]) {
+                merged[key] = { ...defaultSort[key], ...savedSort[key] };
+            }
+        }
+        return merged;
+    }
+    
+    // 検索用ソート設定を取得
+    getSearchSortParams() {
+        const sort = this.settings.searchSort || this.defaultSettings.searchSort;
+        const columns = [];
+        const directions = [];
+        
+        for (let i = 1; i <= 3; i++) {
+            const priority = sort[`priority${i}`];
+            if (priority && priority.column) {
+                columns.push(priority.column);
+                directions.push(priority.direction);
+            }
+        }
+        
+        // 少なくとも1つのソート列が必要
+        if (columns.length === 0) {
+            columns.push('reception_datetime');
+            directions.push('desc');
+        }
+        
+        return {
+            sort_by: columns.join(','),
+            sort_order: directions.join(',')
+        };
+    }
+    
+    // 重複検出用ソート設定を取得
+    getDuplicateSortParams(duplicateType) {
+        const duplicateSort = this.settings.duplicateSort || this.defaultSettings.duplicateSort;
+        const sort = duplicateSort[duplicateType] || duplicateSort.exact;
+        const columns = [];
+        const directions = [];
+        
+        for (let i = 1; i <= 3; i++) {
+            const priority = sort[`priority${i}`];
+            if (priority && priority.column) {
+                columns.push(priority.column);
+                directions.push(priority.direction);
+            }
+        }
+        
+        // 少なくとも1つのソート列が必要
+        if (columns.length === 0) {
+            columns.push('reception_datetime');
+            directions.push('desc');
+        }
+        
+        return {
+            sort_by: columns.join(','),
+            sort_order: directions.join(',')
+        };
     }
 }

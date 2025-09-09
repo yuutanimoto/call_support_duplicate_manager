@@ -11,8 +11,8 @@ router = APIRouter()
 async def get_reception_data(
     offset: int = Query(0, ge=0, description="データ開始位置"),
     limit: int = Query(100, ge=1, le=500, description="取得件数"),
-    sort_by: str = Query("reception_datetime", description="ソート列"),
-    sort_order: str = Query("desc", regex="^(asc|desc)$", description="ソート順"),
+    sort_by: str = Query("reception_datetime", description="ソート列（カンマ区切りで複数指定可）"),
+    sort_order: str = Query("desc", description="ソート順（カンマ区切りで複数指定可）"),
     keyword: Optional[str] = Query(None, description="キーワード検索（後方互換性）"),
     content_keyword: Optional[str] = Query(None, description="受付内容キーワード"),
     status_keyword: Optional[str] = Query(None, description="対応状況キーワード"),
@@ -26,6 +26,15 @@ async def get_reception_data(
 ):
     """受信データ取得API"""
     try:
+        # ソートパラメータの検証（セキュリティ対策）
+        if sort_order:
+            # カンマ区切りの各要素が asc または desc であることを確認
+            sort_orders = [s.strip().lower() for s in sort_order.split(',')]
+            for order in sort_orders:
+                if order not in ('asc', 'desc'):
+                    raise HTTPException(status_code=400, detail=f"Invalid sort order: {order}")
+            sort_order = ','.join(sort_orders)
+        
         # 日付文字列をdatetimeオブジェクトに変換
         date_from_dt = None
         date_to_dt = None

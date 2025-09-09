@@ -221,15 +221,100 @@
                 </div>
                 <div class="settings-section">
                     <h4>ソート設定</h4>
-                    <div class="form-group">
-                        <label for="default-sort-column">デフォルトソート:</label>
-                        <select id="default-sort-column">
-                            <!-- 動的に生成される列オプション -->
-                        </select>
-                        <select id="default-sort-direction">
-                            <option value="asc">昇順</option>
-                            <option value="desc">降順</option>
-                        </select>
+                    
+                    <!-- タブ切り替え -->
+                    <div class="sort-tabs">
+                        <button class="tab-button active" data-tab="search">検索・フィルター用</button>
+                        <button class="tab-button" data-tab="duplicate">重複検出用</button>
+                    </div>
+                    
+                    <!-- 検索・フィルター用ソート設定 -->
+                    <div id="search-sort-panel" class="sort-panel active">
+                        <h5>検索・フィルター実行時のソート</h5>
+                        
+                        <div class="sort-priority-group">
+                            <label>優先度1:</label>
+                            <select id="search-sort-col-1" class="sort-column-select">
+                                <option value="">なし</option>
+                            </select>
+                            <select id="search-sort-dir-1" class="sort-direction-select">
+                                <option value="asc">昇順</option>
+                                <option value="desc">降順</option>
+                            </select>
+                        </div>
+                        
+                        <div class="sort-priority-group">
+                            <label>優先度2:</label>
+                            <select id="search-sort-col-2" class="sort-column-select">
+                                <option value="">なし</option>
+                            </select>
+                            <select id="search-sort-dir-2" class="sort-direction-select">
+                                <option value="asc">昇順</option>
+                                <option value="desc">降順</option>
+                            </select>
+                        </div>
+                        
+                        <div class="sort-priority-group">
+                            <label>優先度3:</label>
+                            <select id="search-sort-col-3" class="sort-column-select">
+                                <option value="">なし</option>
+                            </select>
+                            <select id="search-sort-dir-3" class="sort-direction-select">
+                                <option value="asc">昇順</option>
+                                <option value="desc">降順</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <!-- 重複検出用ソート設定 -->
+                    <div id="duplicate-sort-panel" class="sort-panel" style="display:none;">
+                        <h5>重複検出実行時のソート</h5>
+                        
+                        <!-- 検出タイプ選択 -->
+                        <div class="duplicate-type-selector">
+                            <label>検出タイプ:</label>
+                            <select id="duplicate-sort-type">
+                                <option value="exact">完全一致</option>
+                                <option value="content">受付内容</option>
+                                <option value="status">対応状況</option>
+                            </select>
+                        </div>
+                        
+                        <!-- 各タイプのソート設定 -->
+                        <div id="duplicate-sort-settings">
+                            <div class="sort-priority-group">
+                                <label>優先度1:</label>
+                                <select id="dup-sort-col-1" class="sort-column-select">
+                                    <option value="">なし</option>
+                                </select>
+                                <select id="dup-sort-dir-1" class="sort-direction-select">
+                                    <option value="asc">昇順</option>
+                                    <option value="desc">降順</option>
+                                </select>
+                            </div>
+                            
+                            <div class="sort-priority-group">
+                                <label>優先度2:</label>
+                                <select id="dup-sort-col-2" class="sort-column-select">
+                                    <option value="">なし</option>
+                                </select>
+                                <select id="dup-sort-dir-2" class="sort-direction-select">
+                                    <option value="asc">昇順</option>
+                                    <option value="desc">降順</option>
+                                </select>
+                            </div>
+                            
+                            <div class="sort-priority-group">
+                                <label>優先度3:</label>
+                                <select id="dup-sort-col-3" class="sort-column-select">
+                                    <option value="">なし</option>
+                                </select>
+                                <select id="dup-sort-dir-3" class="sort-direction-select">
+                                    <option value="asc">昇順</option>
+                                    <option value="desc">降順</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -6,9 +6,48 @@ from database import db_manager
 
 class DuplicateService:
     @staticmethod
+    def build_duplicate_order_by(sort_by: str = None, sort_order: str = None) -> str:
+        """重複検出用のORDER BY句を構築"""
+        # カラム名のマッピング（SQLインジェクション対策）
+        column_map = {
+            "id": "id",
+            "content": "content",
+            "status": "status",
+            "progress": "progress",
+            "system_type": "system_type",
+            "product": "product",
+            "reception_datetime": "reception_datetime",
+            "update_datetime": "update_datetime"
+        }
+        
+        if not sort_by:
+            return "duplicate_key, id"
+        
+        # 複数列ソートの解析
+        sort_columns = sort_by.split(',') if ',' in sort_by else [sort_by]
+        sort_orders = sort_order.split(',') if ',' in sort_order and sort_order else ["ASC"]
+        
+        order_by_parts = []
+        for i, column in enumerate(sort_columns):
+            column = column.strip()
+            if column in column_map:
+                direction = sort_orders[i].strip().upper() if i < len(sort_orders) else "ASC"
+                if direction not in ("ASC", "DESC"):
+                    direction = "ASC"
+                order_by_parts.append(f"{column_map[column]} {direction}")
+        
+        # duplicate_keyを最優先にする
+        if order_by_parts:
+            return f"duplicate_key, {', '.join(order_by_parts)}"
+        else:
+            return "duplicate_key, id"
+    
+    @staticmethod
     def detect_duplicates(
         duplicate_type: str,
-        filters: Optional[FilterRequest] = None
+        filters: Optional[FilterRequest] = None,
+        sort_by: str = None,
+        sort_order: str = None
     ) -> List[DuplicateGroup]:
         """重複データ検出"""
 
@@ -87,7 +126,7 @@ class DuplicateService:
             duplicate_key
         FROM duplicates
         WHERE duplicate_count > 1
-        ORDER BY duplicate_key, id
+        ORDER BY {DuplicateService.build_duplicate_order_by(sort_by, sort_order)}
         """
 
         result = db_manager.execute_query(query, tuple(filter_params))

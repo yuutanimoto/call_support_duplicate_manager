@@ -60,6 +60,40 @@ class DataService:
         return where_clause, params
 
     @staticmethod
+    def build_order_by_clause(sort_by: str, sort_order: str) -> str:
+        """ORDER BY句を構築（複数列ソート対応）"""
+        # カラム名のマッピング（SQLインジェクション対策）
+        column_map = {
+            "id": "recepthead.extentid",
+            "content": "receptbody.rdata",
+            "status": "COALESCE(execbody.execstate, '')",
+            "progress": "cond_item.itemname",
+            "system_type": "stype_item.itemname",
+            "product": "prod_item.itemname",
+            "reception_datetime": "recepthead.calldt",
+            "update_datetime": "COALESCE(receptbody.moddt, recepthead.calldt)"
+        }
+        
+        # 複数列ソートの解析
+        sort_columns = sort_by.split(',') if ',' in sort_by else [sort_by]
+        sort_orders = sort_order.split(',') if ',' in sort_order else [sort_order]
+        
+        order_by_parts = []
+        for i, column in enumerate(sort_columns):
+            column = column.strip()
+            if column in column_map:
+                direction = sort_orders[i].strip().upper() if i < len(sort_orders) else "ASC"
+                if direction not in ("ASC", "DESC"):
+                    direction = "ASC"
+                order_by_parts.append(f"{column_map[column]} {direction}")
+        
+        # デフォルトソート
+        if not order_by_parts:
+            order_by_parts.append("recepthead.calldt DESC")
+        
+        return " ORDER BY " + ", ".join(order_by_parts)
+    
+    @staticmethod
     def get_reception_data(
         offset: int = 0,
         limit: int = 100,
@@ -126,7 +160,7 @@ class DataService:
             OR receptbody.moddt >= '2015-01-01 00:00:00'
         )
         {filter_where}
-        ORDER BY {sort_by} {sort_order.upper()}
+        {DataService.build_order_by_clause(sort_by, sort_order)}
         LIMIT %s OFFSET %s
         """
 

@@ -89,11 +89,17 @@ class DuplicateManagementApp {
         try {
             this.showLoading(true);
 
+            // TableManagerからソート設定を取得
+            const sortParams = this.tableManager ? this.tableManager.getSearchSortParams() : {
+                sort_by: "reception_datetime",
+                sort_order: "desc"
+            };
+
             const params = new URLSearchParams({
                 offset: offset.toString(),
                 limit: this.getPageSize().toString(),
-                sort_by: "reception_datetime",
-                sort_order: "desc",
+                sort_by: sortParams.sort_by,
+                sort_order: sortParams.sort_order,
                 include_deleted: this.includeDeleted.toString(),
                 ...this.currentFilters,
             });
@@ -519,19 +525,27 @@ class DuplicateManagementApp {
         const duplicateType = document.getElementById("duplicate-type-select").value;
         const filters = this.getAllFilters();
 
+        // TableManagerから重複検出用ソート設定を取得
+        const sortParams = this.tableManager ? this.tableManager.getDuplicateSortParams(duplicateType) : {
+            sort_by: "reception_datetime",
+            sort_order: "desc"
+        };
+
         // フィルター条件をログ出力（デバッグ用）
         console.log("=== 重複検出実行 ===");
         console.log("検出タイプ:", duplicateType);
         console.log("適用フィルター条件:", filters);
+        console.log("ソート設定:", sortParams);
         console.log("削除済みデータ含む:", this.includeDeleted);
 
         try {
             this.showLoading(true);
 
-            // フィルター条件に削除済みフラグを追加
+            // フィルター条件に削除済みフラグとソート設定を追加
             const allFilters = {
                 ...filters,
-                include_deleted: this.includeDeleted
+                include_deleted: this.includeDeleted,
+                ...sortParams
             };
 
             const params = new URLSearchParams();
